@@ -50,9 +50,13 @@ contract Bridge {
     }
 
     // //далее вызываем функцию ридиим и токены минтятся
-    // function reedem(address _to, uint _amount, uint _otherChainNonce) external {
-    //     token._mint(_to, _amount)
-    // };
+    function reedem(
+        address _to,
+        uint256 _amount,
+        uint256 _otherChainNonce
+    ) external {
+        token.mint(_to, _amount);
+    }
 
     //пользователи не могут вызвать просто так функцию ридим и свап. ВАлидатор долженр проверить
     // бекенд тоже не может распорядаться нашими деньгами
