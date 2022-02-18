@@ -15,7 +15,7 @@ async function main() {
 
   // We get the contract to deploy
   const BridgeBSC = await ethers.getContractFactory("BridgeBSC");
-  const bridgeBSC = await BridgeBSC.deploy("0x5206b31964e14BEabeb24DA0c676058132E527C6");
+  const bridgeBSC = await BridgeBSC.deploy("0x3e45AB08fc568827aB276D4510F91a2903dA4FD7");
   await bridgeBSC.deployed();
 
 

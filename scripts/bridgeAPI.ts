@@ -21,7 +21,9 @@ async function main() {
 
     // console.log("Greeter deployed to:", greeter.address);
 
-    const bridgeBSC = await ethers.getContractAt("BridgeBSC", "0x34351Ec81c9572B2E07A5cc5E83263880ec7fE53")
+    //const bridgeBSC = await ethers.getContractAt("BridgeBSC", "0x94890De12AB8ae3C3F6777130300Ba4719BD25e8")
+    const abi = require("C:/Projects/Brigge/artifacts/contracts/BridgeBSC.sol/BridgeBSC.json")
+
     const bridgeETH = await ethers.getContractAt("BridgeETH", "0x44FeA08ec92c9F1486e9D22520A166ef093B02d7")
 
     const ethProvider = new ethers.providers.AlchemyProvider(
@@ -35,15 +37,13 @@ async function main() {
 
     const ethSigner = new ethers.Wallet(`0x${process.env.PRIVATE_KEY}`, ethProvider);
     const bscSigner = new ethers.Wallet(`0x${process.env.PRIVATE_KEY}`, bscProvider);
-    //console.log(ethSigner, bscSigner)
+    console.log(bscSigner)
+    const bridgeBSC = await new ethers.Contract("0x94890De12AB8ae3C3F6777130300Ba4719BD25e8", abi.abi, bscSigner)
 
-    bridgeBSC.on("SwapInitialized", async (_from, _to, _amount, _chainId, _nonce, _symbol) => {
+    bridgeBSC.on("SwapInitialized", (_from, _to, _amount, _chainId, _nonce, _symbol) => {
         console.log(_from, _to, _amount, _chainId, _nonce, _symbol)
+
     })
-
-
-
-
 }
 
 // We recommend this pattern to be able to use async/await everywhere

@@ -7,8 +7,8 @@ import "./TokenBase.sol";
 
 contract ETHToken is TokenBase {
     constructor() TokenBase("ETHToken", "ETHT") {
-        _mint(msg.sender, (1000 * 10) ^ 18);
+        _mint(msg.sender, (10000000000000000000000));
     }
 }
 
-//0x9eBDF9AC0752f7C947A44Af615872D12c5416042
+//0x49eA3a1089ec7dA043f7Bee3Fc967237014Db143

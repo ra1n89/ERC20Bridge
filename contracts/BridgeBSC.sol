@@ -7,4 +7,4 @@ contract BridgeBSC is Bridge {
     constructor(address token) Bridge(token) {}
 }
 
-//0x69cc18a33a0ae14F1796915c28F2B4E23Dc44EA6
+//0x94890De12AB8ae3C3F6777130300Ba4719BD25e8

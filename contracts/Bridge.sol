@@ -4,10 +4,13 @@ pragma solidity ^0.8.4;
 import "hardhat/console.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "./IToken.sol";
+import "./BSCToken.sol";
+import "./ETHToken.sol";
+import "./TokenBase.sol";
 
 contract Bridge {
     address public admin;
-    IToken public token;
+    TokenBase public token;
     uint256 public nonce;
 
     //вызываем фукнцию свап в сети эфира
@@ -25,7 +28,7 @@ contract Bridge {
 
     constructor(address _token) {
         admin = msg.sender;
-        token = IToken(_token);
+        token = TokenBase(_token);
     }
 
     function swap(

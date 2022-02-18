@@ -7,8 +7,8 @@ import "./TokenBase.sol";
 
 contract BSCToken is TokenBase {
     constructor() TokenBase("BSCToken", "BSCT") {
-        _mint(msg.sender, (1000 * 10) ^ 18);
+        _mint(msg.sender, (10000000000000000000000));
     }
 }
 
-//0x5206b31964e14BEabeb24DA0c676058132E527C6
+//0x3e45AB08fc568827aB276D4510F91a2903dA4FD7
