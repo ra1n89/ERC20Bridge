@@ -43,6 +43,15 @@ describe("Brigde", function () {
 
     })
 
+    it("Bob's bscToken and Alice's ethToken started balances correct ", async function () {
+        const mintedToken = ethers.utils.parseEther("10000")
+        expect(await bscToken.balanceOf(bob.address)).to.be.equal(mintedToken)
+        expect(await bscToken.balanceOf(alice.address)).to.be.equal(0)
+        expect(await ethToken.balanceOf(alice.address)).to.be.equal(mintedToken)
+        expect(await ethToken.balanceOf(bob.address)).to.be.equal(0)
+    })
+
+
     it("Bridge ", async function () {
 
         // const ethProvider = new ethers.providers.AlchemyProvider(
@@ -63,12 +72,25 @@ describe("Brigde", function () {
         //await bridgeETH.reedem("0x7E670e2807F96a6df5F936Ec37ff92595CEFA3E4", 1000000000000000, 2)
         const _from = bob.address;
         const _to = alice.address;
-        const _amount = 1000;
-        const _chainId = 1000;
-        const _nonce = 1000;
+        const amount = 10
+        const mintedToken = 10000
+        const diff = mintedToken - amount
+        const sum = mintedToken + amount
+        const _amount = ethers.utils.parseEther(amount.toString())
+        const _mintedToken = ethers.utils.parseEther(mintedToken.toString())
+        const _diff = ethers.utils.parseEther(diff.toString())
+        const _sum = ethers.utils.parseEther(sum.toString())
+        let _chainId = 3;
+        const _nonce = 0;
         const _symbol = "ETHT";
         const _otherChainNonce = 2;
         expect(await bridgeBSC.swap(_to, _amount, _chainId, _nonce, _symbol)).to.emit(bridgeBSC, "SwapInitialized").withArgs(_from, _to, _amount, _chainId, _nonce, _symbol)
+
+        expect(await bscToken.balanceOf(bob.address)).to.be.equal(_diff)
+        expect(await bscToken.balanceOf(alice.address)).to.be.equal(0)
+        expect(await ethToken.balanceOf(alice.address)).to.be.equal(_mintedToken)
+        expect(await ethToken.balanceOf(bob.address)).to.be.equal(0)
+
         const message = {
             _to,
             _amount,
@@ -79,19 +101,22 @@ describe("Brigde", function () {
         const signature = await bob.signMessage(
             ethers.utils.arrayify(
                 ethers.utils.keccak256(
-                    ethers.utils.defaultAbiCoder.encode(['address', 'uint256', 'uint256', 'string'], [to, amount, nonce, symbol])
+                    ethers.utils.defaultAbiCoder.encode(['address', 'uint256', 'uint256', 'string'], [_to, _amount, _nonce, _symbol])
                 )
             )
         );
 
 
-        //console.log(flatSignature)
-        //console.log(signature.v, signature.r, signature.s);
-        //console.log(typeof (signature.v))
-        //console.log(signedDataHash)
-        //console.log(bytesArray)
-        bridgeETH.reedem(_to, _amount, _nonce, _symbol, signature)
+        if (_chainId == 97) {
+            bridgeBSC.reedem(_to, _amount, _nonce, _symbol, signature)
+        } else if (_chainId === 3) {
+            bridgeETH.reedem(_to, _amount, _nonce, _symbol, signature)
+        }
 
+        expect(await bscToken.balanceOf(bob.address)).to.be.equal(_diff)
+        expect(await bscToken.balanceOf(alice.address)).to.be.equal(0)
+        expect(await ethToken.balanceOf(alice.address)).to.be.equal(_sum)
+        expect(await ethToken.balanceOf(bob.address)).to.be.equal(0)
 
     })
 
