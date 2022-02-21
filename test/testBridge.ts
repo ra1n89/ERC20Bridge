@@ -76,21 +76,21 @@ describe("Brigde", function () {
             _symbol
         }
 
-        const signedDataHash = ethers.utils.solidityKeccak256(
-            ["address", "uint256", "uint256", "string"],
-            [_to, _amount, _nonce, _symbol]
+        const signature = await bob.signMessage(
+            ethers.utils.arrayify(
+                ethers.utils.keccak256(
+                    ethers.utils.defaultAbiCoder.encode(['address', 'uint256', 'uint256', 'string'], [to, amount, nonce, symbol])
+                )
+            )
         );
-        const bytesArray = ethers.utils.arrayify(signedDataHash);
-        const flatSignature = await bob.signMessage(bytesArray); //
-        const signature = ethers.utils.splitSignature(flatSignature);
 
 
         //console.log(flatSignature)
-        console.log(signature.v, signature.r, signature.s);
+        //console.log(signature.v, signature.r, signature.s);
         //console.log(typeof (signature.v))
         //console.log(signedDataHash)
         //console.log(bytesArray)
-        bridgeETH.reedem(_to, _amount, _nonce, _symbol, signature.v, signature.r, signature.s)
+        bridgeETH.reedem(_to, _amount, _nonce, _symbol, signature)
 
 
     })

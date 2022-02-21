@@ -57,24 +57,15 @@ contract Bridge {
         uint256 _amount,
         uint256 _nonce,
         string memory _symbol,
-        bytes8 _signatureV,
-        bytes32 _signatureR,
-        bytes32 _signatureS
+        bytes memory signature
     ) external {
         bytes32 signedDataHash = keccak256(
-            abi.encodePacked(_to, _amount, _nonce, _symbol)
+            abi.encode(_to, _amount, _nonce, _symbol)
         );
-        bytes32 message = signedDataHash.toEthSignedMessageHash();
-
-        // address signer = message.tryRecover(
-        //     _signatureV,
-        //     _signatureR,
-        //     _signatureS
-        // );
-        // token.mint(_to, _amount);
-        // message.recover(_signatureV);
+        bytes32 message = ECDSA.toEthSignedMessageHash(signedDataHash);
+        address signer = message.recover(signature);
+        token.mint(_to, _amount);
     }
+    //пользователи не могут вызвать просто так функцию ридим и свап. ВАлидатор долженр проверить
+    // бекенд тоже не может распорядаться нашими деньгами
 }
-
-//пользователи не могут вызвать просто так функцию ридим и свап. ВАлидатор долженр проверить
-// бекенд тоже не может распорядаться нашими деньгами
