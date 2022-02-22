@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "./TokenBase.sol";
 
 contract BSCToken is TokenBase {
-    constructor() TokenBase("BSCToken", "BSCT") {
+    constructor() TokenBase("BSCToken", "TTT") {
         _mint(msg.sender, (10000000000000000000000));
     }
 }

@@ -16,7 +16,7 @@ async function main() {
   // We get the contract to deploy
 
   const BridgeETH = await ethers.getContractFactory("BridgeETH");
-  const bridgeETH = await BridgeETH.deploy("0x72F80717BDF3c1B1288Dee4611c30c3d73b3dC9E");
+  const bridgeETH = await BridgeETH.deploy("0x49eA3a1089ec7dA043f7Bee3Fc967237014Db143");
   await bridgeETH.deployed();
 
   console.log("BridgeETH deployed to:", bridgeETH.address);

@@ -26,12 +26,24 @@ task("swap", "swap token")
   .addParam("to", "to")
   .addParam("amount", "amount")
   .addParam("chainid", "chainid")
-  .addParam("nonce", "nonce")
   .addParam("symbol", "symbol")
   .setAction(async (taskArgs, hre) => {
     const contract = await hre.ethers.getContractAt("BridgeBSC", taskArgs.address)
-    const balance = await contract.swap(taskArgs.to, taskArgs.amount, taskArgs.chainid, taskArgs.nonce, taskArgs.symbol);
+    const balance = await contract.swap(taskArgs.to, taskArgs.amount, taskArgs.chainid, taskArgs.symbol);
   });
+
+task("reedem", "mint token")
+  .addParam("address", "The contract address on Rinkeby")
+  .addParam("to", "to")
+  .addParam("amount", "amount")
+  .addParam("nonce", "amount")
+  .addParam("symbol", "symbol")
+  .addParam("singnature", "symbol")
+  .setAction(async (taskArgs, hre) => {
+    const contract = await hre.ethers.getContractAt("BridgeBSC", taskArgs.address)
+    const balance = await contract.swap(taskArgs.to, taskArgs.amount, taskArgs.nonce, taskArgs.symbol, taskArgs.singnature,);
+  });
+
 
 
 
