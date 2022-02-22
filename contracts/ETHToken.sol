@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "./TokenBase.sol";
 
 contract ETHToken is TokenBase {
-    constructor() TokenBase("ETHToken", "ETHT") {
+    constructor() TokenBase("ETHToken", "TTT") {
         _mint(msg.sender, (10000000000000000000000));
     }
 }

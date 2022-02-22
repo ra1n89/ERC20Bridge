@@ -64,25 +64,18 @@ describe("Brigde", function () {
         expect(await bridgeBSC.swap(_to, _amount, _chainId, _symbol)).to.emit(bridgeBSC, "SwapInitialized").withArgs(_from, _to, _amount, _chainId, _nonce2, _symbol)
     })
 
+    it("Event 'SwapInitialized' works correctly", async function () {
+        const _from = bob.address;
+        const _to = alice.address;
+        const amount = 10
+        const _amount = ethers.utils.parseEther(amount.toString())
+        let _chainId = 3;
+        const _nonce = 0;
+        const _symbol = "ETHT";
+        expect(await bridgeBSC.swap(_to, _amount, _chainId, _symbol)).to.emit(bridgeBSC, "SwapInitialized").withArgs(_from, _to, _amount, _chainId, _nonce, _symbol)
+    })
 
-    it("Bridge ", async function () {
-
-        // const ethProvider = new ethers.providers.AlchemyProvider(
-        //     "ropsten",
-        //     process.env.ALCHEMY_API_KEY_ROPSTEN
-        // );
-
-        // const bscProvider = new ethers.providers.JsonRpcProvider(
-        //     "https://data-seed-prebsc-1-s1.binance.org:8545/"
-        // );
-
-        // const ethSigner = new ethers.Wallet(`0x${process.env.PRIVATE_KEY}`, ethers.provider);
-        // const bscSigner = new ethers.Wallet(`0x${process.env.PRIVATE_KEY}`, ethers.provider);
-
-        // const bridgeBSC = await new ethers.ContractAt("0x51e458C045BAd7e667E57f69Fc580De9e7A142b2", abiBSC.abi, bscSigner)
-        // const bridgeETH = await new ethers.Contract("0x994Ef7003B670E53B1E9C82595f78F337d2B0070", abiETH.abi, ethSigner)
-
-        //await bridgeETH.reedem("0x7E670e2807F96a6df5F936Ec37ff92595CEFA3E4", 1000000000000000, 2)
+    it("Bridge works correct to BSC => ETH direction", async function () {
         const _from = bob.address;
         const _to = alice.address;
         const amount = 10
@@ -95,20 +88,12 @@ describe("Brigde", function () {
         const _sum = ethers.utils.parseEther(sum.toString())
         let _chainId = 3;
         const _nonce = 0;
-        const _symbol = "ETHT";
+        const _symbol = "TTT";
         expect(await bridgeBSC.swap(_to, _amount, _chainId, _symbol)).to.emit(bridgeBSC, "SwapInitialized").withArgs(_from, _to, _amount, _chainId, _nonce, _symbol)
-
         expect(await bscToken.balanceOf(bob.address)).to.be.equal(_diff)
         expect(await bscToken.balanceOf(alice.address)).to.be.equal(0)
         expect(await ethToken.balanceOf(alice.address)).to.be.equal(_mintedToken)
         expect(await ethToken.balanceOf(bob.address)).to.be.equal(0)
-
-        const message = {
-            _to,
-            _amount,
-            _nonce,
-            _symbol
-        }
 
         const signature = await bob.signMessage(
             ethers.utils.arrayify(
@@ -117,7 +102,6 @@ describe("Brigde", function () {
                 )
             )
         );
-
 
         if (_chainId == 97) {
             bridgeBSC.reedem(_to, _amount, _nonce, _symbol, signature)
@@ -129,6 +113,47 @@ describe("Brigde", function () {
         expect(await bscToken.balanceOf(alice.address)).to.be.equal(0)
         expect(await ethToken.balanceOf(alice.address)).to.be.equal(_sum)
         expect(await ethToken.balanceOf(bob.address)).to.be.equal(0)
+
+    })
+
+    it("Bridge works correct to ETH => BSC direction", async function () {
+        const _from = alice.address;
+        const _to = bob.address;
+        const amount = 10
+        const mintedToken = 10000
+        const diff = mintedToken - amount
+        const sum = mintedToken + amount
+        const _amount = ethers.utils.parseEther(amount.toString())
+        const _mintedToken = ethers.utils.parseEther(mintedToken.toString())
+        const _diff = ethers.utils.parseEther(diff.toString())
+        const _sum = ethers.utils.parseEther(sum.toString())
+        let _chainId = 97;
+        const _nonce = 0;
+        const _symbol = "TTT";
+        expect(await bridgeETH.connect(alice).swap(_to, _amount, _chainId, _symbol)).to.emit(bridgeETH, "SwapInitialized").withArgs(_from, _to, _amount, _chainId, _nonce, _symbol)
+        expect(await ethToken.balanceOf(alice.address)).to.be.equal(_diff)
+        expect(await ethToken.balanceOf(bob.address)).to.be.equal(0)
+        expect(await bscToken.balanceOf(bob.address)).to.be.equal(_mintedToken)
+        expect(await bscToken.balanceOf(alice.address)).to.be.equal(0)
+
+        const signature = await bob.signMessage(
+            ethers.utils.arrayify(
+                ethers.utils.keccak256(
+                    ethers.utils.defaultAbiCoder.encode(['address', 'uint256', 'uint256', 'string'], [_to, _amount, _nonce, _symbol])
+                )
+            )
+        );
+
+        if (_chainId == 97) {
+            bridgeBSC.reedem(_to, _amount, _nonce, _symbol, signature)
+        } else if (_chainId === 3) {
+            bridgeETH.reedem(_to, _amount, _nonce, _symbol, signature)
+        }
+
+        expect(await ethToken.balanceOf(alice.address)).to.be.equal(_diff)
+        expect(await ethToken.balanceOf(bob.address)).to.be.equal(0)
+        expect(await bscToken.balanceOf(bob.address)).to.be.equal(_sum)
+        expect(await bscToken.balanceOf(alice.address)).to.be.equal(0)
 
     })
 

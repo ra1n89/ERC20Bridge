@@ -14,6 +14,8 @@ contract Bridge {
     address public admin;
     TokenBase public token;
     uint256 public nonce;
+    bytes32 public dataHash;
+    mapping(uint256 => bool) transactionIsDone;
 
     //вызываем фукнцию свап в сети эфира
     //выолняется логика
@@ -33,15 +35,15 @@ contract Bridge {
         token = TokenBase(_token);
     }
 
-    mapping(uint256 => bool) transactionIsDone;
-
     function swap(
         address _to,
         uint256 _amount,
         uint256 _chainId,
         string memory _symbol
-    ) external {
+    ) external returns (bytes32) {
+        require(_chainId == 3 || _chainId == 97, "choose correct chainId");
         token.burn(msg.sender, _amount);
+
         emit SwapInitialized(
             msg.sender,
             _to,
@@ -50,6 +52,7 @@ contract Bridge {
             nonce,
             _symbol
         );
+
         nonce++;
     }
 
