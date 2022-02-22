@@ -33,11 +33,12 @@ contract Bridge {
         token = TokenBase(_token);
     }
 
+    mapping(uint256 => bool) transactionIsDone;
+
     function swap(
         address _to,
         uint256 _amount,
         uint256 _chainId,
-        uint256 _nonce,
         string memory _symbol
     ) external {
         token.burn(msg.sender, _amount);
@@ -46,9 +47,10 @@ contract Bridge {
             _to,
             _amount,
             _chainId,
-            _nonce,
+            nonce,
             _symbol
         );
+        nonce++;
     }
 
     // //далее вызываем функцию ридиим и токены минтятся
@@ -59,12 +61,18 @@ contract Bridge {
         string memory _symbol,
         bytes memory signature
     ) external {
+        require(
+            transactionIsDone[_nonce] == false,
+            "transaction already proccesed"
+        );
         bytes32 signedDataHash = keccak256(
             abi.encode(_to, _amount, _nonce, _symbol)
         );
         bytes32 message = ECDSA.toEthSignedMessageHash(signedDataHash);
         address signer = message.recover(signature);
+        require(signer == address(0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266));
         token.mint(_to, _amount);
+        transactionIsDone[_nonce] = true;
     }
     //пользователи не могут вызвать просто так функцию ридим и свап. ВАлидатор долженр проверить
     // бекенд тоже не может распорядаться нашими деньгами

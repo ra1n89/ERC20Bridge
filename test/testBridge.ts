@@ -51,6 +51,19 @@ describe("Brigde", function () {
         expect(await ethToken.balanceOf(bob.address)).to.be.equal(0)
     })
 
+    it("Nonce counts correctly", async function () {
+        const _from = bob.address;
+        const _to = alice.address;
+        const amount = 10
+        const _amount = ethers.utils.parseEther(amount.toString())
+        let _chainId = 3;
+        const _nonce1 = 0;
+        const _nonce2 = 1;
+        const _symbol = "ETHT";
+        expect(await bridgeBSC.swap(_to, _amount, _chainId, _symbol)).to.emit(bridgeBSC, "SwapInitialized").withArgs(_from, _to, _amount, _chainId, _nonce1, _symbol)
+        expect(await bridgeBSC.swap(_to, _amount, _chainId, _symbol)).to.emit(bridgeBSC, "SwapInitialized").withArgs(_from, _to, _amount, _chainId, _nonce2, _symbol)
+    })
+
 
     it("Bridge ", async function () {
 
@@ -83,8 +96,7 @@ describe("Brigde", function () {
         let _chainId = 3;
         const _nonce = 0;
         const _symbol = "ETHT";
-        const _otherChainNonce = 2;
-        expect(await bridgeBSC.swap(_to, _amount, _chainId, _nonce, _symbol)).to.emit(bridgeBSC, "SwapInitialized").withArgs(_from, _to, _amount, _chainId, _nonce, _symbol)
+        expect(await bridgeBSC.swap(_to, _amount, _chainId, _symbol)).to.emit(bridgeBSC, "SwapInitialized").withArgs(_from, _to, _amount, _chainId, _nonce, _symbol)
 
         expect(await bscToken.balanceOf(bob.address)).to.be.equal(_diff)
         expect(await bscToken.balanceOf(alice.address)).to.be.equal(0)
