@@ -53,7 +53,7 @@ task("reedem", "mint token")
 // Go to https://hardhat.org/config/ to learn more
 
 const config: HardhatUserConfig = {
-  solidity: "0.8.4",
+  solidity: "0.8.12",
   networks: {
     ropsten: {
       url: process.env.ROPSTEN_URL || "",
@@ -78,8 +78,8 @@ const config: HardhatUserConfig = {
     currency: "USD",
   },
   etherscan: {
-    //apiKey: process.env.BSCSCAN_API_KEY,
-    apiKey: process.env.ETHERSCAN_API_KEY,
+    apiKey: process.env.BSCSCAN_API_KEY,
+    //apiKey: process.env.ETHERSCAN_API_KEY,
   },
 };
 
