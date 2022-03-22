@@ -1,7 +1,6 @@
 //SPDX-License-Identifier: Unlicense
 pragma solidity ^0.8.4;
 
-import "hardhat/console.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 contract TokenBase is ERC20 {
@@ -12,17 +11,14 @@ contract TokenBase is ERC20 {
     }
 
     function updateAdmin(address newAdmin) external {
-        //require(msg.sender == admin, "only admin");
         admin = newAdmin;
     }
 
     function mint(address to, uint256 amount) external {
-        //require(msg.sender == admin, "only admin");
         _mint(to, amount);
     }
 
     function burn(address owner, uint256 amount) external {
-        //require(msg.sender == admin, "only admin");
         _burn(owner, amount);
     }
 }
