@@ -1,7 +1,6 @@
 //SPDX-License-Identifier: Unlicense
 pragma solidity ^0.8.4;
 
-import "hardhat/console.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "./IToken.sol";
@@ -9,6 +8,11 @@ import "./BSCToken.sol";
 import "./ETHToken.sol";
 import "./TokenBase.sol";
 
+/** @title Crosschain bridge
+ * @author Rishat Akhmetzyanov
+ * @notice not for using in real projects beacause it's not audited
+ * @notice backend function implements in testBrdge
+ */
 contract Bridge {
     using ECDSA for bytes32;
     address public admin;
@@ -17,10 +21,6 @@ contract Bridge {
     bytes32 public dataHash;
     mapping(uint256 => bool) transactionIsDone;
 
-    //вызываем фукнцию свап в сети эфира
-    //выолняется логика
-    //отправляется event
-    //backend видит данные и разрешает вызвать функцию reedem в сети Бинанс
     event SwapInitialized(
         address _from,
         address _to,
@@ -56,7 +56,6 @@ contract Bridge {
         nonce++;
     }
 
-    // //далее вызываем функцию ридиим и токены минтятся
     function reedem(
         address _to,
         uint256 _amount,
@@ -77,6 +76,4 @@ contract Bridge {
         token.mint(_to, _amount);
         transactionIsDone[_nonce] = true;
     }
-    //пользователи не могут вызвать просто так функцию ридим и свап. ВАлидатор долженр проверить
-    // бекенд тоже не может распорядаться нашими деньгами
 }

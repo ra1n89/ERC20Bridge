@@ -1,4 +1,4 @@
-##ERC20 Bridge
+## ERC20 Bridge
 
 This project implements a crosschain bridge contract for sending ERC20 tokens between Ethereum blockchain and Binance Smart Chain
 
@@ -15,7 +15,7 @@ token bsc testnet: 0x3e45AB08fc568827aB276D4510F91a2903dA4FD7
 bridge bsc testnet: https://testnet.bscscan.com/address/0xf1cb2047cde6e04a496Dfbf36850a0839f61dE7f#code
 
 
-##How to use
+## How to use
 
 Create a .env file using the .env.example template
 
